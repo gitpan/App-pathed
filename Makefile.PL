@@ -15,6 +15,10 @@ WriteMakefile(
         'Pod::Find'    => 0,
         'Pod::Usage'   => 0,
     },
+    TEST_REQUIRES => {
+        'Test::More'        => 0,
+        'Test::Differences' => 0,
+    },
     VERSION_FROM => $from,
     test         => { TESTS => 't/*.t' }
 );

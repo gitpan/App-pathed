@@ -4,61 +4,75 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 use Pod::Find qw(pod_where);
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub usage {
     pod2usage(-input => pod_where({ -inc => 1 }, __PACKAGE__), @_);
 }
 
 sub run {
+    my %opt;
     GetOptions(
-        'delete|d=s@'  => \(my $deletes),
-        'append|a=s@'  => \(my $appends),
-        'prepend|p=s@' => \(my $prepends),
-        'unique|u'     => \(my $unique),
-        'split|s'      => \(my $split),
-        'check|c'      => \(my $check),
-        'help|h'       => \(my $help),
-        'man'          => \(my $man),
+        \%opt, qw(
+          delete|d=s@  append|a=s@  prepend|p=s@
+          unique|u split|s check|c
+          var|v=s help|h man
+          )
     ) or usage(-exitval => 2);
-    usage(-exitval => 1) if $help;
-    usage(-exitval => 0, -verbose => 2) if $man;
+    usage(-exitval => 1) if $opt{help};
+    usage(-exitval => 0, -verbose => 2) if $opt{man};
     usage(-exitval => 2, -msg => '--split and --check are mutually exclusive')
-      if $split && $check;
-    my @parts = split /:/ => $ENV{PATH};
-    if ($appends) {
-        push @parts, @$appends;
+      if $opt{split} && $opt{check};
+    my $path = shift @ARGV;
+    usage(
+        -exitval => 2,
+        -msg     => 'using a path argument and --var and are mutually exclusive'
+    ) if defined $path && $opt{var};
+    unless (defined $path) {
+        if ($opt{var}) {
+            $path = $ENV{ $opt{var} };
+            unless (defined $path && length $path) {
+                die "The $opt{var} environment variable is empty\n";
+            }
+        } else {
+            $path = $ENV{PATH};
+        }
     }
-    if ($prepends) {
-        unshift @parts, reverse @$prepends;
+    my @result = process($path, \%opt);
+    print "$_\n" for @result;
+}
+
+# separate methods so it's easily testable
+sub process {
+    my ($path, $opt) = @_;
+    my @parts = split /:/ => $path;
+    if ($opt->{append}) {
+        push @parts, @{ $opt->{append} };
     }
-    if ($deletes) {
-        for my $delete (@$deletes) {
+    if ($opt->{prepend}) {
+        unshift @parts, reverse @{ $opt->{prepend} };
+    }
+    if ($opt->{delete}) {
+        for my $delete (@{ $opt->{delete} }) {
             @parts = grep { index($_, $delete) == -1 } @parts;
         }
     }
-    if ($unique) {
+    if ($opt->{unique}) {
         my %seen;
         @parts = grep { !$seen{$_}++ } @parts;
     }
-    if ($check) {
-        my %seen;
+    if ($opt->{check}) {
+        my (%seen, @result);
         for my $part (@parts) {
             next if $seen{$part}++;
-            unless (-d $part) {
-                warn "$part is not a directory\n";
-                next;
-            }
-            unless (-r $part) {
-                warn "$part is not readable\n";
-                next;
-            }
+            next if -r $part;
+            push @result => "$part is not readable";
         }
-    } elsif ($split) {
-        print "$_\n" for @parts;
+        return @result;
+    } elsif ($opt->{split}) {
+        return @parts;
     } else {
-        print join ':' => @parts;
-        print "\n";
+        return (join ':' => @parts);
     }
 }
 1;
@@ -71,12 +85,14 @@ App::pathed - munge the Bash PATH environment variable
 
 =head1 SYNOPSIS
 
-    # PATH=$(pathed --unique --delete rbenv)
-    # PATH=$(pathed --append /home/my/bin -a /some/other/bin)
-    # PATH=$(pathed --prepend /home/my/bin -p /some/other/bin)
-    # for i in $(pathed --split); do ...; done
-    # pathed --check
-    # pathed --man
+    $ PATH=$(pathed --unique --delete rbenv)
+    $ PATH=$(pathed --append /home/my/bin -a /some/other/bin)
+    $ PATH=$(pathed --prepend /home/my/bin -p /some/other/bin)
+    $ for i in $(pathed --split); do ...; done
+    $ pathed --check
+    $ pathed --man
+    $ pathed -u --var PERL5LIB
+    $ pathed -u $PERL5LIB
 
 =head1 DESCRIPTION
 
@@ -91,26 +107,30 @@ iterate over them, for example.
 The path elements can also be checked with C<--check> to make sure that the
 indicated directories exist and are readable.
 
+But C<pathed> isn't just for C<PATH> variable. You can specify an environment
+variable to use with the C<--var> option, or just pass a value to be used
+directly after the options.
+
 The following command-line options are supported:
 
 =over 4
 
-=item --append, -a <path>
+=item C<--append>, C<-a> C<< <path> >>
 
 Appends the given path to the list of path elements. This option can be
 specified several times; the paths are appended in the given order.
 
-=item --prepend, -p <path>
+=item C<--prepend>, C<-p> C<< <path> >>
 
 Prepends the given path to the list of path elements. This option can be
 specified several times; the paths are prepended in the given order. For
 example:
 
-    pathed -p first -p second -p third
+    $ pathed -p first -p second -p third
 
 will result in C<third:second:first:$PATH>.
 
-=item --delete, -d <substr>
+=item C<--delete>, C<-d> C<< <substr> >>
 
 Deletes those path elements which contain the given substring. This option can
 be specified several times; the path elements are deleted in the given order.
@@ -118,17 +138,17 @@ be specified several times; the path elements are deleted in the given order.
 When options are mixed, C<--append> is processed first, then C<--prepend>, then
 C<--delete>.
 
-=item --unique, -u
+=item C<--unique>, C<-u>
 
 Removes duplicate path elements.
 
-=item --split, -s
+=item C<--split>, C<-s>
 
 Prints each path element on its own line. If this option is not specified, the
 path elements are printed on one line, joined by colons, like you would
 normally specify the C<PATH> variable.
 
-=item --check, -c
+=item C<--check>, C<-c>
 
 Checks whether each path element is a readable directory and prints warnings if
 necessary. Warnings are printed only once per path element, even if that
@@ -137,11 +157,15 @@ element occurs several times in C<PATH>.
 When C<--check> is used, the path is not printed. C<--check> and C<--split> are
 mutually exclusive.
 
-=item --help, -h
+=item C<--var>, C<-v> C<< <variable> >>
+
+Use the indiated environment variable.
+
+=item C<--help>, C<-h>
 
 Prints the synopsis.
 
-=item man
+=item C<--man>
 
 Prints the whole documentation.
 

@@ -4,12 +4,14 @@ App::pathed - munge the Bash PATH environment variable
 
 # SYNOPSIS
 
-    # PATH=$(pathed --unique --delete rbenv)
-    # PATH=$(pathed --append /home/my/bin -a /some/other/bin)
-    # PATH=$(pathed --prepend /home/my/bin -p /some/other/bin)
-    # for i in $(pathed --split); do ...; done
-    # pathed --check
-    # pathed --man
+    $ PATH=$(pathed --unique --delete rbenv)
+    $ PATH=$(pathed --append /home/my/bin -a /some/other/bin)
+    $ PATH=$(pathed --prepend /home/my/bin -p /some/other/bin)
+    $ for i in $(pathed --split); do ...; done
+    $ pathed --check
+    $ pathed --man
+    $ pathed -u --var PERL5LIB
+    $ pathed -u $PERL5LIB
 
 # DESCRIPTION
 
@@ -24,24 +26,28 @@ iterate over them, for example.
 The path elements can also be checked with `--check` to make sure that the
 indicated directories exist and are readable.
 
+But `pathed` isn't just for `PATH` variable. You can specify an environment
+variable to use with the `--var` option, or just pass a value to be used
+directly after the options.
+
 The following command-line options are supported:
 
-- \--append, -a <path>
+- `--append`, `-a` `<path>`
 
     Appends the given path to the list of path elements. This option can be
     specified several times; the paths are appended in the given order.
 
-- \--prepend, -p <path>
+- `--prepend`, `-p` `<path>`
 
     Prepends the given path to the list of path elements. This option can be
     specified several times; the paths are prepended in the given order. For
     example:
 
-        pathed -p first -p second -p third
+        $ pathed -p first -p second -p third
 
     will result in `third:second:first:$PATH`.
 
-- \--delete, -d <substr>
+- `--delete`, `-d` `<substr>`
 
     Deletes those path elements which contain the given substring. This option can
     be specified several times; the path elements are deleted in the given order.
@@ -49,17 +55,17 @@ The following command-line options are supported:
     When options are mixed, `--append` is processed first, then `--prepend`, then
     `--delete`.
 
-- \--unique, -u
+- `--unique`, `-u`
 
     Removes duplicate path elements.
 
-- \--split, -s
+- `--split`, `-s`
 
     Prints each path element on its own line. If this option is not specified, the
     path elements are printed on one line, joined by colons, like you would
     normally specify the `PATH` variable.
 
-- \--check, -c
+- `--check`, `-c`
 
     Checks whether each path element is a readable directory and prints warnings if
     necessary. Warnings are printed only once per path element, even if that
@@ -68,11 +74,15 @@ The following command-line options are supported:
     When `--check` is used, the path is not printed. `--check` and `--split` are
     mutually exclusive.
 
-- \--help, -h
+- `--var`, `-v` `<variable>`
+
+    Use the indiated environment variable.
+
+- `--help`, `-h`
 
     Prints the synopsis.
 
-- man
+- `--man`
 
     Prints the whole documentation.
 

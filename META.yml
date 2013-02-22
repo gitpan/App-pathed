@@ -3,6 +3,7 @@ abstract: 'munge the Bash PATH environment variable'
 author:
   - 'Marcel Gruenauer <marcel@cpan.org>'
 build_requires:
+  Test::Differences: 0
   Test::More: 0
 configure_requires:
   ExtUtils::MakeMaker: 6.58
@@ -21,4 +22,4 @@ requires:
   Getopt::Long: 0
   Pod::Find: 0
   Pod::Usage: 0
-version: 0.01
+version: 0.02

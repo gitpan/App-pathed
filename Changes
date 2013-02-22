@@ -1,5 +1,13 @@
 Revision history for Perl extension App-pathed
 
+0.02 Fri Feb 22 22:09:39 2013 CET
+    [New Features]
+        - $PATH is the default to work on, but you can pass any string like
+          $PERL5LIB or use --var. (Thanks to @beldon++ for the suggestion.)
+
+    [Improvements]
+        - Better documentation markup
+
 0.01 Fri Feb 22 10:56:07 2013 CET
     [New Features]
         - original version

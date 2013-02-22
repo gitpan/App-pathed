@@ -8,6 +8,7 @@ MANIFEST.SKIP
 README.md
 t/00-compile.t
 t/000-report-versions.t
+t/options.t
 xt/critic.t
 xt/eol.t
 xt/no-tabs.t
