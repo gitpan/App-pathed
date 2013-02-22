@@ -9,9 +9,10 @@ App::pathed - munge the Bash PATH environment variable
     $ PATH=$(pathed --prepend /home/my/bin -p /some/other/bin)
     $ for i in $(pathed --split); do ...; done
     $ pathed --check
-    $ pathed --man
     $ pathed -u --var PERL5LIB
     $ pathed -u $PERL5LIB
+    $ pathed -d two --sep ';' '/foo/one;foo/two'
+    $ pathed --man
 
 # DESCRIPTION
 
@@ -77,6 +78,12 @@ The following command-line options are supported:
 - `--var`, `-v` `<variable>`
 
     Use the indiated environment variable.
+
+- `--sep`, `-e` `<separator>`
+
+    The default path separator is a colon, but with this option you can specify a
+    different separator. It is used to split the input path and to join the output
+    path.
 
 - `--help`, `-h`
 

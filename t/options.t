@@ -50,4 +50,24 @@ check(
     [ '/foo/bar/one is not readable', '/foo/bar/two is not readable' ],
     'check'
 );
+check(
+    '/usr/bin:/usr/sbin', { sep => ';', split => 1 },
+    ['/usr/bin:/usr/sbin'], 'different seperator'
+);
+check(
+    '/usr/bin;/usr/sbin',
+    { sep => ';', split => 1 },
+    [ '/usr/bin', '/usr/sbin' ],
+    'different seperator and split'
+);
+check('/usr/bin;/usr/sbin', { sep => ';', },
+    ['/usr/bin;/usr/sbin'], 'different seperator and joining');
+check(
+    '/usr/bin;/usr/sbin', { sep => ';', delete => ['sbin'] },
+    ['/usr/bin'], 'different seperator and delete 1'
+);
+check(
+    '/usr/bin:/usr/sbin', { sep => ';', delete => ['sbin'] },
+    [''], 'different seperator and delete 2'
+);
 done_testing;

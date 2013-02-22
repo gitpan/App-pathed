@@ -4,7 +4,7 @@ use warnings;
 use Getopt::Long;
 use Pod::Usage;
 use Pod::Find qw(pod_where);
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub usage {
     pod2usage(-input => pod_where({ -inc => 1 }, __PACKAGE__), @_);
@@ -16,7 +16,7 @@ sub run {
         \%opt, qw(
           delete|d=s@  append|a=s@  prepend|p=s@
           unique|u split|s check|c
-          var|v=s help|h man
+          var|v=s sep|e=s help|h man
           )
     ) or usage(-exitval => 2);
     usage(-exitval => 1) if $opt{help};
@@ -45,7 +45,8 @@ sub run {
 # separate methods so it's easily testable
 sub process {
     my ($path, $opt) = @_;
-    my @parts = split /:/ => $path;
+    my $separator = $opt->{sep} // ':';
+    my @parts = split $separator => $path;
     if ($opt->{append}) {
         push @parts, @{ $opt->{append} };
     }
@@ -72,7 +73,7 @@ sub process {
     } elsif ($opt->{split}) {
         return @parts;
     } else {
-        return (join ':' => @parts);
+        return (join $separator => @parts);
     }
 }
 1;
@@ -90,9 +91,10 @@ App::pathed - munge the Bash PATH environment variable
     $ PATH=$(pathed --prepend /home/my/bin -p /some/other/bin)
     $ for i in $(pathed --split); do ...; done
     $ pathed --check
-    $ pathed --man
     $ pathed -u --var PERL5LIB
     $ pathed -u $PERL5LIB
+    $ pathed -d two --sep ';' '/foo/one;foo/two'
+    $ pathed --man
 
 =head1 DESCRIPTION
 
@@ -160,6 +162,12 @@ mutually exclusive.
 =item C<--var>, C<-v> C<< <variable> >>
 
 Use the indiated environment variable.
+
+=item C<--sep>, C<-e> C<< <separator> >>
+
+The default path separator is a colon, but with this option you can specify a
+different separator. It is used to split the input path and to join the output
+path.
 
 =item C<--help>, C<-h>
 
