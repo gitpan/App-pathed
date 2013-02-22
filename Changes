@@ -1,5 +1,10 @@
 Revision history for Perl extension App-pathed
 
+0.04 Sat Feb 23 00:10:53 2013 CET
+    [Improvements]
+        - The default separator is what $Config::Config{path_sep} reports
+
+
 0.03 Fri Feb 22 23:38:08 2013 CET
     [New Features]
         - You can specify a different path separator with --sep. (Thanks to

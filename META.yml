@@ -22,4 +22,4 @@ requires:
   Getopt::Long: 0
   Pod::Find: 0
   Pod::Usage: 0
-version: 0.03
+version: 0.04

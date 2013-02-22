@@ -1,10 +1,11 @@
 package App::pathed;
 use strict;
 use warnings;
+use Config;
 use Getopt::Long;
 use Pod::Usage;
 use Pod::Find qw(pod_where);
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub usage {
     pod2usage(-input => pod_where({ -inc => 1 }, __PACKAGE__), @_);
@@ -45,7 +46,7 @@ sub run {
 # separate methods so it's easily testable
 sub process {
     my ($path, $opt) = @_;
-    my $separator = $opt->{sep} // ':';
+    my $separator = $opt->{sep} // $Config::Config{path_sep};
     my @parts = split $separator => $path;
     if ($opt->{append}) {
         push @parts, @{ $opt->{append} };
@@ -99,8 +100,10 @@ App::pathed - munge the Bash PATH environment variable
 =head1 DESCRIPTION
 
 The Bash C<PATH> environment variable contains a colon-separated list of paths.
-C<pathed> - "path editor" - can split the path, append, prepend or remove
-elements, remove duplicates and reassemble it.
+Platforms other than UNIX might use a different separator; C<pathed> uses the
+default separator for the current OS. C<pathed> - "path editor" - can split
+the path, append, prepend or remove elements, remove duplicates and reassemble
+it.
 
 The result is then printed so you can assign it to the C<PATH> variable. If
 C<--split> is used, each path element is printed on a separate line, so you can
@@ -147,8 +150,9 @@ Removes duplicate path elements.
 =item C<--split>, C<-s>
 
 Prints each path element on its own line. If this option is not specified, the
-path elements are printed on one line, joined by colons, like you would
-normally specify the C<PATH> variable.
+path elements are printed on one line, joined by the default path separator as
+reported by L<Config> - usually a colon -, like you would normally specify the
+C<PATH> variable.
 
 =item C<--check>, C<-c>
 
@@ -165,9 +169,9 @@ Use the indiated environment variable.
 
 =item C<--sep>, C<-e> C<< <separator> >>
 
-The default path separator is a colon, but with this option you can specify a
-different separator. It is used to split the input path and to join the output
-path.
+The default path separator is what L<Config> reports - usually a colon - but
+with this option you can specify a different separator. It is used to split the
+input path and to join the output path.
 
 =item C<--help>, C<-h>
 
@@ -186,7 +190,7 @@ C<vim> with C<homebrew> while C<rbenv> was active. C<vim> wanted to be compiled
 with the system ruby, so I was looking for a quick way to remove C<rbenv> from
 the C<PATH>:
 
-    PATH=$(pathed -d rbenv) brew install vim
+    $ PATH=$(pathed -d rbenv) brew install vim
 
 =head1 AUTHORS
 

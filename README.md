@@ -17,8 +17,10 @@ App::pathed - munge the Bash PATH environment variable
 # DESCRIPTION
 
 The Bash `PATH` environment variable contains a colon-separated list of paths.
-`pathed` - "path editor" - can split the path, append, prepend or remove
-elements, remove duplicates and reassemble it.
+Platforms other than UNIX might use a different separator; `pathed` uses the
+default separator for the current OS. `pathed` - "path editor" - can split
+the path, append, prepend or remove elements, remove duplicates and reassemble
+it.
 
 The result is then printed so you can assign it to the `PATH` variable. If
 `--split` is used, each path element is printed on a separate line, so you can
@@ -63,8 +65,9 @@ The following command-line options are supported:
 - `--split`, `-s`
 
     Prints each path element on its own line. If this option is not specified, the
-    path elements are printed on one line, joined by colons, like you would
-    normally specify the `PATH` variable.
+    path elements are printed on one line, joined by the default path separator as
+    reported by [Config](http://search.cpan.org/perldoc?Config) - usually a colon -, like you would normally specify the
+    `PATH` variable.
 
 - `--check`, `-c`
 
@@ -81,9 +84,9 @@ The following command-line options are supported:
 
 - `--sep`, `-e` `<separator>`
 
-    The default path separator is a colon, but with this option you can specify a
-    different separator. It is used to split the input path and to join the output
-    path.
+    The default path separator is what [Config](http://search.cpan.org/perldoc?Config) reports - usually a colon - but
+    with this option you can specify a different separator. It is used to split the
+    input path and to join the output path.
 
 - `--help`, `-h`
 
@@ -100,7 +103,7 @@ The initial motivation for writing `pathed` came when I tried to install
 with the system ruby, so I was looking for a quick way to remove `rbenv` from
 the `PATH`:
 
-    PATH=$(pathed -d rbenv) brew install vim
+    $ PATH=$(pathed -d rbenv) brew install vim
 
 # AUTHORS
 
