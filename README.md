@@ -27,11 +27,11 @@ The result is then printed so you can assign it to the `PATH` variable. If
 iterate over them, for example.
 
 The path elements can also be checked with `--check` to make sure that the
-indicated directories exist and are readable.
+indicated paths are readable.
 
-But `pathed` isn't just for `PATH` variable. You can specify an environment
-variable to use with the `--var` option, or just pass a value to be used
-directly after the options.
+But `pathed` isn't just for the `PATH` variable. You can specify an
+environment variable to use with the `--var` option, or just pass a value to
+be used directly after the options.
 
 The following command-line options are supported:
 
@@ -66,25 +66,27 @@ The following command-line options are supported:
 
     Prints each path element on its own line. If this option is not specified, the
     path elements are printed on one line, joined by the default path separator as
-    reported by [Config](http://search.cpan.org/perldoc?Config) - usually a colon -, like you would normally specify the
+    reported by [Config](https://metacpan.org/module/Config) - usually a colon -, like you would normally specify the
     `PATH` variable.
 
 - `--check`, `-c`
 
-    Checks whether each path element is a readable directory and prints warnings if
-    necessary. Warnings are printed only once per path element, even if that
-    element occurs several times in `PATH`.
+    Checks whether each path element is readable and prints warnings if necessary.
+    Does not check whether the path element is a directory because `pathed` can
+    also be used for specifying multiple files such as configuration files.
+    Warnings are printed only once per path element, even if that element occurs
+    several times in `PATH`.
 
     When `--check` is used, the path is not printed. `--check` and `--split` are
     mutually exclusive.
 
 - `--var`, `-v` `<variable>`
 
-    Use the indiated environment variable.
+    Use the indicated environment variable.
 
 - `--sep`, `-e` `<separator>`
 
-    The default path separator is what [Config](http://search.cpan.org/perldoc?Config) reports - usually a colon - but
+    The default path separator is what [Config](https://metacpan.org/module/Config) reports - usually a colon - but
     with this option you can specify a different separator. It is used to split the
     input path and to join the output path.
 
@@ -107,7 +109,7 @@ the `PATH`:
 
 # AUTHORS
 
-The following person is the authors of all the files provided in this
+The following person is the author of all the files provided in this
 distribution unless explicitly noted otherwise.
 
 Marcel Gruenauer <marcel@cpan.org>, [http://marcelgruenauer.com](http://marcelgruenauer.com)

@@ -5,7 +5,7 @@ use Config;
 use Getopt::Long;
 use Pod::Usage;
 use Pod::Find qw(pod_where);
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 sub usage {
     pod2usage(-input => pod_where({ -inc => 1 }, __PACKAGE__), @_);
@@ -110,11 +110,11 @@ C<--split> is used, each path element is printed on a separate line, so you can
 iterate over them, for example.
 
 The path elements can also be checked with C<--check> to make sure that the
-indicated directories exist and are readable.
+indicated paths are readable.
 
-But C<pathed> isn't just for C<PATH> variable. You can specify an environment
-variable to use with the C<--var> option, or just pass a value to be used
-directly after the options.
+But C<pathed> isn't just for the C<PATH> variable. You can specify an
+environment variable to use with the C<--var> option, or just pass a value to
+be used directly after the options.
 
 The following command-line options are supported:
 
@@ -156,16 +156,18 @@ C<PATH> variable.
 
 =item C<--check>, C<-c>
 
-Checks whether each path element is a readable directory and prints warnings if
-necessary. Warnings are printed only once per path element, even if that
-element occurs several times in C<PATH>.
+Checks whether each path element is readable and prints warnings if necessary.
+Does not check whether the path element is a directory because C<pathed> can
+also be used for specifying multiple files such as configuration files.
+Warnings are printed only once per path element, even if that element occurs
+several times in C<PATH>.
 
 When C<--check> is used, the path is not printed. C<--check> and C<--split> are
 mutually exclusive.
 
 =item C<--var>, C<-v> C<< <variable> >>
 
-Use the indiated environment variable.
+Use the indicated environment variable.
 
 =item C<--sep>, C<-e> C<< <separator> >>
 
@@ -194,7 +196,7 @@ the C<PATH>:
 
 =head1 AUTHORS
 
-The following person is the authors of all the files provided in this
+The following person is the author of all the files provided in this
 distribution unless explicitly noted otherwise.
 
 Marcel Gruenauer <marcel@cpan.org>, L<http://marcelgruenauer.com>
