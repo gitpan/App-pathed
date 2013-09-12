@@ -1,5 +1,9 @@
 Revision history for Perl extension App-pathed
 
+0.06  2013-09-13 00:32:54 CEST
+    [Improvements]
+        - Converted dist to Milla.
+
 0.05 Sat Feb 23 11:33:23 2013 CET
     [Improvements]
         - Clarified documentation and fixed typos

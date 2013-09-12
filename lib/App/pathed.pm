@@ -5,7 +5,7 @@ use Config;
 use Getopt::Long;
 use Pod::Usage;
 use Pod::Find qw(pod_where);
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub usage {
     pod2usage(-input => pod_where({ -inc => 1 }, __PACKAGE__), @_);

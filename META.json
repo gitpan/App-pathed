@@ -1,10 +1,10 @@
 {
    "abstract" : "munge the Bash PATH environment variable",
    "author" : [
-      "Marcel Gruenauer <marcel@cpan.org>"
+      "The following person is the author of all the files provided in this"
    ],
-   "dynamic_config" : 1,
-   "generated_by" : "ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921",
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Milla version v1.0.4, Dist::Zilla version 4.300038, CPAN::Meta::Converter version 2.132510",
    "license" : [
       "perl_5"
    ],
@@ -16,7 +16,11 @@
    "no_index" : {
       "directory" : [
          "t",
-         "inc"
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples"
       ]
    },
    "prereqs" : {
@@ -28,7 +32,12 @@
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.58"
+            "Module::Build::Tiny" : "0.027"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::Pod" : "1.41"
          }
       },
       "runtime" : {
@@ -40,5 +49,20 @@
       }
    },
    "release_status" : "stable",
-   "version" : "0.05"
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/marcelgruenauer/pathed/issues"
+      },
+      "homepage" : "https://github.com/marcelgruenauer/pathed",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/marcelgruenauer/pathed.git",
+         "web" : "https://github.com/marcelgruenauer/pathed"
+      }
+   },
+   "version" : "0.06",
+   "x_contributors" : [
+      "Marcel Gruenauer <hanekomu@gmail.com>"
+   ]
 }
+
