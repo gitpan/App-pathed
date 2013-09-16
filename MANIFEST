@@ -5,9 +5,9 @@ MANIFEST
 META.json
 META.yml
 README
-bin/pathed
 cpanfile
 dist.ini
 lib/App/pathed.pm
+script/pathed
 t/options.t
 t/release-pod-syntax.t

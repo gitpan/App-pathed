@@ -5,7 +5,7 @@ use Config;
 use Getopt::Long;
 use Pod::Usage;
 use Pod::Find qw(pod_where);
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 sub usage {
     pod2usage(-input => pod_where({ -inc => 1 }, __PACKAGE__), @_);
@@ -21,7 +21,7 @@ sub run {
           )
     ) or usage(-exitval => 2);
     usage(-exitval => 1) if $opt{help};
-    usage(-exitval => 0, -verbose => 2) if $opt{man};
+    usage(-exitval => 0, -verbose => 2, -output => \*STDERR) if $opt{man};
     usage(-exitval => 2, -msg => '--split and --check are mutually exclusive')
       if $opt{split} && $opt{check};
     my $path = shift @ARGV;

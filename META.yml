@@ -30,6 +30,6 @@ resources:
   bugtracker: https://github.com/marcelgruenauer/pathed/issues
   homepage: https://github.com/marcelgruenauer/pathed
   repository: https://github.com/marcelgruenauer/pathed.git
-version: 0.06
+version: 0.07
 x_contributors:
   - 'Marcel Gruenauer <hanekomu@gmail.com>'

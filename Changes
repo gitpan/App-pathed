@@ -1,5 +1,11 @@
 Revision history for Perl extension App-pathed
 
+0.07  2013-09-16 13:38:24 CEST
+    [Bug Fixes]
+        - Build (via Build.PL via milla) expects the script in script/, not
+          bin/
+        - --man now correctly sends the output to STDERR
+
 0.06  2013-09-13 00:32:54 CEST
     [Improvements]
         - Converted dist to Milla.
